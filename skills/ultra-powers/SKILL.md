@@ -1,6 +1,6 @@
 ---
 name: ultra-powers
-description: The everything-Flow for building, shipping, and growing software. 36 hand-picked skills across ideate to grow, with a routing tree that fires the right one on intent (and disambiguates the overlaps).
+description: The everything-Flow for building, shipping, and growing software. 40 hand-picked skills across ideate to grow, with a routing tree that fires the right one on intent (and disambiguates the overlaps).
 ---
 
 # Activate ultra-powers
@@ -9,7 +9,7 @@ Activate the ultra-powers Flow for this session. After activation, FLOW.md routi
 
 ## What this does
 
-This skill invokes the bundled `flowy:_activator` skill (sibling skill in this plugin) with the flow name `ultra-powers`. The activator handles:
+This skill invokes the bundled `ultra-powers:_activator` skill (sibling skill in this plugin) with the flow name `ultra-powers`. The activator handles:
 
 1. Reading the FLOW.md at `../../flows/ultra-powers/FLOW.md` (relative to this skill's directory — two levels up to the plugin root, then into the `flows/` directory)
 2. Indexing the bundled skills
@@ -18,12 +18,12 @@ This skill invokes the bundled `flowy:_activator` skill (sibling skill in this p
 
 ## Invocation
 
-Look at the argument THIS skill was invoked with, and forward to `flowy:_activator`:
-- **No argument** (or anything that isn't `deactivate`/`status`) → activate: invoke `flowy:_activator` with argument `ultra-powers`.
-- **`deactivate`** (optionally followed by a flow name) → invoke `flowy:_activator` with argument `deactivate ultra-powers` (use the user's named flow if they gave one). Turns this Flow off for THIS session only.
-- **`status`** → invoke `flowy:_activator` with argument `status`.
+Look at the argument THIS skill was invoked with, and forward to `ultra-powers:_activator`:
+- **No argument** (or anything that isn't `deactivate`/`status`) → activate: invoke `ultra-powers:_activator` with argument `ultra-powers`.
+- **`deactivate`** (optionally followed by a flow name) → invoke `ultra-powers:_activator` with argument `deactivate ultra-powers` (use the user's named flow if they gave one). Turns this Flow off for THIS session only.
+- **`status`** → invoke `ultra-powers:_activator` with argument `status`.
 
-So `/flowy:ultra-powers` activates, `/flowy:ultra-powers deactivate` turns it off, and `/flowy:ultra-powers status` reports what's active + whether the hook is live.
+So `/ultra-powers:ultra-powers` activates, `/ultra-powers:ultra-powers deactivate` turns it off, and `/ultra-powers:ultra-powers status` reports what's active + whether the hook is live.
 
 The activator resolves paths relative to this plugin's root automatically. The current skill's base directory is `skills/ultra-powers/`; the plugin root is two levels up.
 

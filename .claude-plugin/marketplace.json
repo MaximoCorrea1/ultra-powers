@@ -1,15 +1,15 @@
 {
-  "name": "superpowers-flow-hardened",
-  "description": "Hand-picked Flows for Claude Code — goal-bound skill compositions with mandatory FLOW.md routing.",
+  "name": "ultra-powers",
+  "description": "ultra-powers — the everything-Flow for building, shipping, and growing software, with mandatory FLOW.md routing.",
   "owner": {
     "name": "Maximo Correa",
     "email": "maximocorrearosas@gmail.com"
   },
   "plugins": [
     {
-      "name": "flowy",
-      "description": "Curated library of goal-bound AI Flows with mandatory FLOW.md routing enforcement.",
-      "version": "0.7.0",
+      "name": "ultra-powers",
+      "description": "40 hand-picked skills (build -> ship -> grow) + a disambiguating FLOW.md router + the Flowy enforcement engine.",
+      "version": "0.1.0",
       "source": "./",
       "author": {
         "name": "Maximo Correa",

@@ -1,15 +1,16 @@
 {
-  "name": "flowy",
-  "description": "Curated library of goal-bound AI Flows. Each Flow bundles hand-picked skills with a FLOW.md routing document for mandatory enforcement.",
-  "version": "0.7.0",
+  "name": "ultra-powers",
+  "description": "The everything-Flow for building, shipping, and growing software: 40 hand-picked skills with a disambiguating FLOW.md router + the Flowy enforcement engine.",
+  "version": "0.1.0",
   "author": {
     "name": "Maximo Correa",
     "email": "maximocorrearosas@gmail.com"
   },
-  "homepage": "https://flowy.dev",
-  "repository": "https://github.com/MaximoCorrea1/flowy-flows",
+  "homepage": "https://flowy.sh",
+  "repository": "https://github.com/MaximoCorrea1/ultra-powers",
   "license": "CC-BY-SA-4.0",
   "keywords": [
+    "ultra-powers",
     "flowy",
     "flows",
     "ai-agent",

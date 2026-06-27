@@ -1,6 +1,6 @@
 # FLOW.md: ultra-powers
 
-> The everything-Flow for an indie founder building, shipping, and growing software. ~36 real, hand-verified skills across validate → design → plan → build → debug → verify → review → ship → grow, composed from five open-source suites — with a routing tree that knows *which* of the overlapping skills to fire.
+> The everything-Flow for an indie founder building, shipping, and growing software. 40 real, hand-verified skills across validate → design → plan → build → debug → verify → review → ship → grow, composed from seven open-source suites (superpowers, compound-engineering, gstack, frontend-design, emil, marketing-skills, claude-seo) — with a routing tree that knows *which* of the overlapping skills to fire.
 > Skills by their respective authors (MIT / Apache-2.0, see Attribution). Routing by Flowy.
 
 <!-- The Flowy engine supplies the universal contract (announce, READ/invoke, host-wins,

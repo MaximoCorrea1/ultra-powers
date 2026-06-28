@@ -104,6 +104,24 @@ d("flowy-paths.sh — canonical state dir", () => {
     expect(root("/c/Users/U/not-a-home")).toBe(""); // no-op on a non-.claude home
   });
 
+  test("directory-source plugin root (real plugin dir, no /plugins/) falls back to the Claude home (F3)", () => {
+    // A `directory`-source marketplace runs the plugin straight from its source dir, so
+    // CLAUDE_PLUGIN_ROOT is e.g. C:\Users\User\ultra-powers — no /plugins/ and not a
+    // .claude home. State must STILL resolve (to $HOME/.claude) or the activator exits 5
+    // and the hook can't read state (no banner). Gated on a REAL plugin dir
+    // (.claude-plugin/plugin.json) so a typo path still fails loud.
+    const REPO_ROOT = toPosix(join(HERE, "..")); // this plugin's own root (has .claude-plugin/plugin.json)
+    function rootWithHome(src: string, home: string): string {
+      const res = spawnSync(GIT_BASH!, ["-c", '. "$1"; flowy_state_root "$2"', "_", HELPER, src], {
+        encoding: "utf8",
+        env: { ...process.env, HOME: home, CLAUDE_CONFIG_DIR: "" },
+      });
+      return (res.stdout ?? "").trim();
+    }
+    expect(rootWithHome(REPO_ROOT, "/c/Users/U")).toBe(HOME_PREFIX); // real plugin dir -> Claude home
+    expect(rootWithHome("/c/Users/U/not-a-plugin", "/c/Users/U")).toBe(""); // non-plugin -> fail-loud
+  });
+
   test("UNC single-letter server does NOT collide with a same-letter Windows drive (F1)", () => {
     // \\s\share\proj is a NETWORK path; S:\share\proj is local drive S. Pre-fix the
     // MSYS arm collapsed //s -> drive S and merged their keys (cross-project bleed).

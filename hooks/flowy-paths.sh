@@ -104,7 +104,20 @@ flowy_state_root() {
   if [ "$_home" = "$_src" ]; then
     case "$_src" in
       */.claude) _home="$_src" ;;
-      *) return 1 ;;
+      *)
+        # No /plugins/ segment and not a .claude home. A `directory`-source
+        # marketplace runs the plugin straight from its SOURCE dir, so
+        # CLAUDE_PLUGIN_ROOT is e.g. C:\Users\User\ultra-powers (no /plugins/).
+        # Anchor state in the canonical Claude home so every flowy-derived plugin
+        # shares ONE out-of-repo state root. Gate on a REAL plugin dir
+        # (.claude-plugin/plugin.json) AND a known home, so a typo/garbage path
+        # still no-ops fail-loud (never a wrong key).
+        if [ -f "$_src/.claude-plugin/plugin.json" ] && [ -n "${CLAUDE_CONFIG_DIR:-}${HOME:-}" ]; then
+          _home="$(printf '%s' "${CLAUDE_CONFIG_DIR:-$HOME/.claude}" | tr '\\' '/')"
+        else
+          return 1
+        fi
+        ;;
     esac
   fi
   # HARD guard: must resolve to a /.claude home (unexpected layout -> no-op).

@@ -10,6 +10,8 @@
 
 ## Routing
 
+**The rule:** when a trigger matches, INVOKE the named skill BEFORE doing the task yourself. Writing the code, patching the bug, or claiming 'done' without first invoking is the failure this Flow exists to stop.
+
 ```
 USER MESSAGE
   └─ (fill: phase) → invoke (skill-slug)
@@ -22,6 +24,12 @@ USER MESSAGE
 ## Phases
 
 1. (fill)
+
+## You are rationalizing if you think...
+
+- "Too simple to invoke the skill." -> Invoke it. The gate is the point.
+- "I'll do the skill's job myself, faster." -> The taste and discipline live in the skill. Invoke it.
+- "The summary says I already routed." -> After compaction, re-read this file and restate the phase.
 
 ## Attribution
 

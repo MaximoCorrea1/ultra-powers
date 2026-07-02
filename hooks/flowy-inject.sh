@@ -438,7 +438,7 @@ if [ -n "$LIVE_NAMES" ]; then
   # lever that took adherence 38%->100%) then INVOKE, before any other tool. The verbose
   # per-skill YES/NO ritual is intentionally dropped (founder: minimal verbosity; terse+read
   # == verbose for adherence). Keep it one line (tests assert this); do not split a clause.
-  printf '%s\n' "⚑ Flowy routing ACTIVE: $LIVE_NAMES. Before any other tool: READ the FLOW.md in full (path below), then invoke the matching skill per its decision tree. FLOW.md (re-read after compaction): $LIVE_REFS"
+  printf '%s\n' "Flowy routing ACTIVE: $LIVE_NAMES. Before any other tool you MUST read the FLOW.md in full and invoke the matching skill; do not write code, edit, or claim done first. FLOW.md (re-read after compaction): $LIVE_REFS"
 
   # V2: periodic lightweight FLOW.md reinject (every Nth prompt). The counter is a
   # SIDECAR file (NOT the state file) so the grep/sed state parse stays clean. It only
@@ -466,7 +466,7 @@ if [ -n "$LIVE_NAMES" ]; then
     # FLOW-compact.md we would cat into the agent's context. Restrict to PLUGIN_ROOT.
     case "$COMPACT" in "$PLUGIN_ROOT"/* ) : ;; * ) COMPACT="" ;; esac
     if [ -n "$COMPACT" ] && [ -f "$COMPACT" ] && [ ! -L "$COMPACT" ]; then
-      printf '%s\n' "--- Flowy routing refresh (every $REINJECT_N prompts) — re-read the full FLOW.md if unsure ---"
+      printf '%s\n' "Flowy routing refresh (every $REINJECT_N prompts). Re-read the full FLOW.md if unsure:"
       cat "$COMPACT" 2>/dev/null || true
     fi
   fi
@@ -478,7 +478,7 @@ if [ -n "$CORRUPT_NAMES" ]; then
   # name containing a dot (e.g. "flow.v2") stays intact on a single line.
   printf '%s\n' "$CORRUPT_NAMES" | while IFS= read -r CN; do
     [ -n "$CN" ] || continue
-    printf '%s\n' "⚠ Flowy: routing state for $CN is unreadable (FLOW.md not found). Re-activate with flowy:$CN, or run /flowy deactivate."
+    printf '%s\n' "Flowy: routing state for $CN is unreadable (FLOW.md not found). Re-activate with flowy:$CN, or run /flowy deactivate."
   done
 fi
 

@@ -423,6 +423,11 @@ test(
     // then routes — terse form, the YES/NO ritual is dropped (founder: minimal verbosity).
     expect(res.stdout.toLowerCase()).toMatch(/read the flow\.md in full/);
     expect(res.stdout).not.toContain("YES,<reason>"); // terse: no YES/NO commitment ritual
+    // Mandatory vocabulary (Seleznov lever): MUST + the negative "do not act first"
+    // directive. Emoji-free (no glyph can overshadow the user's prompt).
+    expect(res.stdout).toMatch(/you MUST/);
+    expect(res.stdout.toLowerCase()).toContain("do not write code, edit, or claim done first");
+    expect(res.stdout).not.toContain("⚑"); // no flag glyph
   });
 });
 

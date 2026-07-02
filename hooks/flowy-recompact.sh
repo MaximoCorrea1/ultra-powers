@@ -49,7 +49,7 @@ case "$NAME" in '' | *[!A-Za-z0-9_.-]* | *..* ) exit 0 ;; esac
 RESOLVED="$(flowy_resolve_flowmd "$NAME" "$REF" "$LOC" "$PROJECT_DIR/.flowy/flows" "$PLUGIN_ROOT")"
 [ -n "$RESOLVED" ] || exit 0
 
-printf '%s\n' "⚑ Flowy: context was just compacted. RE-READ the FLOW.md at $RESOLVED IN FULL now, before your next routing decision."
+printf '%s\n' "Flowy: context was just compacted. You MUST RE-READ the FLOW.md at $RESOLVED IN FULL now, before your next routing decision."
 # Reset the periodic reinject counter so the post-compaction cycle starts fresh — otherwise a
 # session that compacted near count==N would fire this re-read AND the compact table on the very
 # next prompt (double injection). SESSION_ID is allowlisted above; the write is fail-soft.

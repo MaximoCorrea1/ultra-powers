@@ -7,7 +7,7 @@ relevant section when `SKILL.md` points you here.
 
 ## How enforcement works
 An auto-installed `UserPromptSubmit` hook (`hooks/flowy-inject.sh`) reads a per-session
-state file each prompt and, if a Flow is active, injects the ⚑ routing banner — that is
+state file each prompt and, if a Flow is active, injects the routing banner — that is
 what makes routing survive turns + context compaction. You (a skill) do NOT see the
 Claude Code `session_id`; only the hook does (on its stdin). So the activator writes
 `state-PENDING.json` and the hook CLAIMS it by renaming → `state-<session_id>.json` on

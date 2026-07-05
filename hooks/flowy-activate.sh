@@ -16,6 +16,16 @@
 # shell exposes it); else $(pwd). The canonical helper folds /e/ <-> E:\ to one
 # key, so pwd's MSYS form resolves to the hook's Windows-form key.
 #
+# KNOWN LIMITATION (rare): if Claude Code's project dir (what the hook sees in
+# CLAUDE_PROJECT_DIR) differs from the shell's $(pwd) at a DIFFERENT DEPTH (e.g.
+# the hook sees repo/apps/web while pwd is the repo root), the PENDING lands under
+# a different key than the hook reads and the banner will not fire. This is NOT a
+# path-FORM issue (the helper folds E:\ <-> /e/); it is a project-dir mismatch.
+# Diagnostic: if no banner appears next prompt, re-activate from the project root
+# the hook actually uses. We deliberately do NOT auto-write to "sibling" keys — a
+# sibling key can be a DIFFERENT project, so that would leak activation across
+# projects.
+#
 # Output contract: success => exit 0, NOTHING on stdout. Failure => non-zero and
 # a one-line reason on stderr. Fail-loud, never a wrong key. FLOW_NAME and
 # FLOW_REF are charset-validated below before being written into the JSON

@@ -206,8 +206,9 @@ STATE_DIR="$(flowy_state_dir "$PROJECT_DIR" "$PLUGIN_ROOT")"
 mkdir -p "$STATE_DIR" 2>/dev/null || true
 
 # (A) Source timing constants. Provides FLOWY_PENDING_TTL_SECONDS (default 600 —
-# MUST match flowy-constants.sh; the activator stamps against this same TTL, so a
-# shorter fallback would self-heal/delete a PENDING the activator considers fresh).
+# MUST match flowy-constants.sh. The activator writes createdAtEpoch; THIS hook
+# deletes a PENDING older than this TTL, so a shorter fallback would delete a
+# still-valid PENDING the hook should have claimed).
 # The 2>/dev/null suppresses "file not found" on clean installs; the fallback
 # ensures the variable is always set even if the constants file is absent.
 . "$(dirname "$0")/flowy-constants.sh" 2>/dev/null || FLOWY_PENDING_TTL_SECONDS=600
@@ -416,7 +417,7 @@ for NAME in $NAMES; do
       LIVE_REFS="$LIVE_REFS, $RESOLVED"
     fi
   else
-    # DRIVER 3 (ADR-030) — OWNERSHIP GATE. Only warn about a flow THIS plugin owns:
+    # DRIVER 3 (ADR-032) — OWNERSHIP GATE. Only warn about a flow THIS plugin owns:
     #   * location=project → always ours (the user's own .flowy/flows).
     #   * location=plugin/absent → ours ONLY if $PLUGIN_ROOT/flows/<name>/ exists.
     # A plugin-location flow with no dir here belongs to a SIBLING flowy plugin

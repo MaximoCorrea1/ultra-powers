@@ -56,6 +56,35 @@ case "$LOCATION" in plugin | project) : ;; *) LOCATION="plugin" ;; esac
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(pwd)}"
 [ -n "$PROJECT_DIR" ] || { printf 'flowy-activate: no project dir\n' >&2; exit 3; }
 
+# --- Override-injection scan (ADR-032; honors ADR-022 §3 for ALL flows) -------
+# The scan lives HERE, in the one-shot script — not model-side — so activation
+# stays a single call AND every flow (plugin OR project) is scanned. Resolve the
+# FLOW.md with the SAME helper the hook uses; if it resolves, refuse activation on
+# any instruction-override pattern. An unresolvable ref (a not-yet-present flow)
+# has nothing to scan and falls through to the normal write. Deterministic
+# (case/substring), so it does not vary per model. NOTE: POSIX sh cannot do NFKC,
+# so this is an ASCII substring scan — the upstream flowy-add ingestion scan (Node,
+# NFKC-capable) and the host-wins routing contract remain the other layers.
+. "$PLUGIN_ROOT/hooks/flowy-resolve.sh" 2>/dev/null || {
+  printf 'flowy-activate: cannot source flowy-resolve.sh under %s\n' "$PLUGIN_ROOT" >&2
+  exit 9
+}
+FLOWMD="$(flowy_resolve_flowmd "$FLOW_NAME" "$FLOW_REF" "$LOCATION" "$PROJECT_DIR/.flowy/flows" "$PLUGIN_ROOT")"
+if [ -n "$FLOWMD" ] && [ -r "$FLOWMD" ]; then
+  # Normalize: lowercase + collapse all whitespace to single spaces (so a phrase
+  # split across a newline still matches); first 256KB only (cap a pathological file).
+  _scan="$(head -c 262144 "$FLOWMD" 2>/dev/null | tr 'A-Z' 'a-z' | tr -s '[:space:]' ' ')"
+  case "$_scan" in
+    *"ignore claude.md"* | *"disregard claude.md"* | *"override claude.md"* \
+      | *"supersede claude.md"* | *"bypass claude.md"* | *"claude.md is outdated"* \
+      | *"claude.md does not apply"* | *"treat claude.md as non-binding"* \
+      | *"disregard project instructions"* | *"override project settings"* \
+      | *"ignore project standards"* )
+      printf 'flowy-activate: FLOW.md for %s attempts to override CLAUDE.md/project instructions; refused\n' "$FLOW_NAME" >&2
+      exit 10 ;;
+  esac
+fi
+
 # Canonical state dir via the SINGLE source of truth (same as the hook + GC).
 . "$PLUGIN_ROOT/hooks/flowy-paths.sh" 2>/dev/null || {
   printf 'flowy-activate: cannot source flowy-paths.sh under %s\n' "$PLUGIN_ROOT" >&2

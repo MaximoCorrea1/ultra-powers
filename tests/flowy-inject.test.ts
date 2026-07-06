@@ -835,7 +835,7 @@ d("flowy-inject.sh", () => {
   // -------------------------------------------------------------------------
   // CORRUPT (active in state, FLOW.md nowhere) → warning, still exit 0
   // -------------------------------------------------------------------------
-  // DRIVER 3 (ADR-030): a plugin flow this plugin does NOT ship (no flows/<name>/
+  // DRIVER 3 (ADR-032): a plugin flow this plugin does NOT ship (no flows/<name>/
   // dir) belongs to a SIBLING plugin whose own hook resolves it → stay SILENT.
   test("plugin flow not shipped by this plugin (no dir) → silent, no warning, exit 0", () => {
     const dirs = makeDirs();
@@ -871,7 +871,7 @@ d("flowy-inject.sh", () => {
 
   test("flow active but FLOW.md unresolvable → WARNING line, exit 0 (NOT 2)", () => {
     const dirs = makeDirs();
-    // ADR-030: owned-but-broken (dir exists, FLOW.md missing) so it still warns.
+    // ADR-032: owned-but-broken (dir exists, FLOW.md missing) so it still warns.
     mkdirSync(join(dirs.pluginRootWin, "flows", "ghost-flow"), { recursive: true });
     writeState(dirs, "A", {
       schema: "flowy-state-v1",
@@ -1182,7 +1182,7 @@ d("flowy-inject.sh", () => {
 
   test("flowRef with shell metachars and NO valid name → corrupt, exit 0", () => {
     const dirs = makeDirs();
-    // ADR-030: owned-but-broken so the corrupt warning still fires.
+    // ADR-032: owned-but-broken so the corrupt warning still fires.
     mkdirSync(join(dirs.pluginRootWin, "flows", "ghost-flow"), { recursive: true });
     writeState(dirs, "A", {
       schema: "flowy-state-v1",
@@ -1252,7 +1252,7 @@ d("flowy-inject.sh", () => {
   // -------------------------------------------------------------------------
   test("corrupt flow name with a dot → exactly one warning line, name intact", () => {
     const dirs = makeDirs();
-    // ADR-030: owned-but-broken (dir exists) so the corrupt warning still fires.
+    // ADR-032: owned-but-broken (dir exists) so the corrupt warning still fires.
     mkdirSync(join(dirs.pluginRootWin, "flows", "flow.v2"), { recursive: true });
     writeState(dirs, "A", {
       schema: "flowy-state-v1",
@@ -1557,7 +1557,7 @@ d("flowy-inject.sh", () => {
   test("mixed live + corrupt flows → banner for live, warning for corrupt, both in same run, exit 0", () => {
     const dirs = makeDirs();
     writeFlowMd(dirs, "flows/superpowers-flow/FLOW.md");
-    // ADR-030: ghost-flow owned-but-broken (dir exists) so it still warns.
+    // ADR-032: ghost-flow owned-but-broken (dir exists) so it still warns.
     mkdirSync(join(dirs.pluginRootWin, "flows", "ghost-flow"), { recursive: true });
     writeState(dirs, "A", {
       schema: "flowy-state-v1",

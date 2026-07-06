@@ -205,10 +205,13 @@ STATE_DIR="$(flowy_state_dir "$PROJECT_DIR" "$PLUGIN_ROOT")"
 [ -n "$STATE_DIR" ] || exit 0
 mkdir -p "$STATE_DIR" 2>/dev/null || true
 
-# (A) Source timing constants. Provides FLOWY_PENDING_TTL_SECONDS (default 120).
+# (A) Source timing constants. Provides FLOWY_PENDING_TTL_SECONDS (default 600 —
+# MUST match flowy-constants.sh. The activator writes createdAtEpoch; THIS hook
+# deletes a PENDING older than this TTL, so a shorter fallback would delete a
+# still-valid PENDING the hook should have claimed).
 # The 2>/dev/null suppresses "file not found" on clean installs; the fallback
 # ensures the variable is always set even if the constants file is absent.
-. "$(dirname "$0")/flowy-constants.sh" 2>/dev/null || FLOWY_PENDING_TTL_SECONDS=120
+. "$(dirname "$0")/flowy-constants.sh" 2>/dev/null || FLOWY_PENDING_TTL_SECONDS=600
 
 # Project-local flow CONTENT root (inert without an out-of-repo state pointer).
 # Only used to RESOLVE FLOW.md for entries marked "location":"project".
@@ -414,16 +417,31 @@ for NAME in $NAMES; do
       LIVE_REFS="$LIVE_REFS, $RESOLVED"
     fi
   else
-    # CORRUPT_NAMES is NEWLINE-separated (Fix 6): one warning line per name, and
-    # the read loop below splits ONLY on newline. The old IFS=', ' split also
-    # broke on every space AND comma, which would mangle a name containing a
-    # dot/space; newline iteration mirrors the clean NAMES loop above.
-    if [ -z "$CORRUPT_NAMES" ]; then
-      CORRUPT_NAMES="$SAFE_NAME"
-    else
-      CORRUPT_NAMES="$CORRUPT_NAMES
-$SAFE_NAME"
+    # DRIVER 3 (ADR-032) — OWNERSHIP GATE. Only warn about a flow THIS plugin owns:
+    #   * location=project → always ours (the user's own .flowy/flows).
+    #   * location=plugin/absent → ours ONLY if $PLUGIN_ROOT/flows/<name>/ exists.
+    # A plugin-location flow with no dir here belongs to a SIBLING flowy plugin
+    # whose own hook resolves it; warning about it is cross-plugin spam. Stay silent.
+    _owned=1
+    if [ "$LOC" != "project" ]; then
+      case "$NAME" in
+        '' | *[!A-Za-z0-9_.-]* | *..* ) _owned=0 ;;  # unsafe name → not ours to warn
+        * ) [ -d "$PLUGIN_ROOT/flows/$NAME" ] || _owned=0 ;;
+      esac
     fi
+    if [ "$_owned" = "1" ]; then
+      # CORRUPT_NAMES is NEWLINE-separated (Fix 6): one warning line per name, and
+      # the read loop below splits ONLY on newline. The old IFS=', ' split also
+      # broke on every space AND comma, which would mangle a name containing a
+      # dot/space; newline iteration mirrors the clean NAMES loop above.
+      if [ -z "$CORRUPT_NAMES" ]; then
+        CORRUPT_NAMES="$SAFE_NAME"
+      else
+        CORRUPT_NAMES="$CORRUPT_NAMES
+$SAFE_NAME"
+      fi
+    fi
+    # _owned=0 → sibling plugin's flow → silent (no accumulation).
   fi
 done
 set +f

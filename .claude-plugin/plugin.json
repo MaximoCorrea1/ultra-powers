@@ -1,7 +1,7 @@
 {
   "name": "ultra-powers",
-  "description": "The everything-Flow for building, shipping, and growing software: 40 hand-picked skills with a disambiguating FLOW.md router + the Flowy enforcement engine.",
-  "version": "0.3.1",
+  "description": "ultra-powers skill-pack: 40 hand-picked skills (build, ship, grow), each namespaced ultra-powers:<skill>. Routed by the flowy-ultra-powers overlay on the shared Flowy engine.",
+  "version": "0.4.0",
   "author": {
     "name": "Maximo Correa",
     "email": "maximocorrearosas@gmail.com"

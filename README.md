@@ -11,10 +11,18 @@ Built on the [Flowy](https://flowy.sh) enforcement engine.
 /plugin install ultra-powers@ultra-powers
 ```
 
-Restart Claude Code (plugin hooks register at session start), then activate:
+ultra-powers is a **skill-pack** — its routing `FLOW.md` and the enforcement hook live in the **flowy-ultra-powers** overlay on the shared **flowy-core** engine, so install those alongside it:
 
 ```
-/ultra-powers:ultra-powers
+/plugin marketplace add flowy-sh/flowy-core
+/plugin install flowy-core@flowy-core
+/plugin install flowy-ultra-powers@flowy-core
+```
+
+Restart Claude Code (plugin hooks register at session start), then activate the overlay:
+
+```
+/flowy-ultra-powers:activate
 ```
 
 You'll see `✓ ultra-powers active.` From then on a one-line ⚑ routing banner fires each prompt and the FLOW.md routes you to the right skill.
@@ -35,9 +43,9 @@ You'll see `✓ ultra-powers active.` From then on a one-line ⚑ routing banner
 
 The value is the **disambiguation**: when two suites overlap (e.g. `systematic-debugging` vs `ce-debug`), the FLOW.md's "law" routes to exactly one. See [`flows/ultra-powers/FLOW.md`](flows/ultra-powers/FLOW.md) for the routing tree and [`flows/ultra-powers/ATTRIBUTION.md`](flows/ultra-powers/ATTRIBUTION.md) for per-skill credit + licenses.
 
-## Enforcement (built in, no setup)
+## Enforcement (via flowy-core, no setup)
 
-Installing the plugin installs a `UserPromptSubmit` hook — no `settings.json` editing. When ultra-powers is active, the hook injects a one-line routing banner each turn so routing survives context compaction. It's **fail-loud, never fail-closed**: no Flow active → silent, never blocks your prompts. Turn it off with `/ultra-powers:ultra-powers deactivate`.
+The **flowy-core** engine (installed with the flowy-ultra-powers overlay) provides a `UserPromptSubmit` hook — no `settings.json` editing. When ultra-powers is active, the hook injects a one-line routing banner each turn so routing survives context compaction. It's **fail-loud, never fail-closed**: no Flow active → silent, never blocks your prompts. Turn it off with `/flowy-ultra-powers:deactivate`.
 
 ## Attribution & license
 
